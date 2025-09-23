@@ -29,26 +29,27 @@ This repository contains all the files, CAD models, wiring information, and test
 
 ## Repository Structure
 
-📂 HGS_Measurement_Setup 
-├── 📂 2D_Printing 
-│   └── Inkscape files for laser-cut square and triangular brackets 
+- **2D_Printing/**  
+  Contains Inkscape files used for laser cutting the square and triangular brackets.
 
-├── 📂 3D_Printing 
-│   └── OBJ files for 3D printing custom grips and fixtures 
+- **3D_Printing/**  
+  Contains OBJ files for 3D printing custom grips and fixtures.
 
-├── 📂 Testing 
-│   ├── 📄 actuator_speed_control.py   # Software PWM control for actuator speed 
-│   ├── 📄 actuator_trial.py           # Basic actuator forward/backward test 
-│   └── 📄 HX711.py                    # Load cell (HX711) readout test 
+- **Testing/**  
+  Contains Python scripts for component-level testing:  
+  - `actuator_speed_control.py` → Software PWM control for actuator speed  
+  - `actuator_trial.py` → Basic actuator forward/backward test  
+  - `HX711.py` → Load cell (HX711) readout test  
 
-├── 📄 dyna_data_collection_guide.pdf 
-│   Grip protocols and data collection guide 
+- **dyna_data_collection_guide.pdf**  
+  Explains grip protocols and data collection procedures.
 
-├── 📄 RPi5_LoadCell_LActuator_csv.py 
-│   Main experiment code integrating actuator + load cell with CSV logging 
+- **Setup_and_Wiring.pdf**  
+  Provides hardware wiring and assembly instructions.
 
-└── 📄 Setup_and_Wiring.pdf 
-    Hardware wiring and setup instructions 
+- **RPi5_LoadCell_LActuator_csv.py**  
+  Main Python script that integrates actuator + load cell into a closed-loop system, logs force data to CSV, and automates test repetitions.
+
 
 
 
