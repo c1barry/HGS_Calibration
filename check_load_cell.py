@@ -25,8 +25,15 @@ class HX711:
 
     def read(self):
         """Read a single 24-bit sample from HX711."""
-        while self.data_line.get_value():
-            pass  # wait for chip ready
+        # Wait for chip ready with timeout
+        timeout_count = 0
+        while self.data_line.get_value() and timeout_count < 1000:
+            timeout_count += 1
+            time.sleep(0.001)  # 1ms delay
+        
+        if timeout_count >= 1000:
+            raise Exception("HX711 timeout waiting for chip ready")
+            
         value = 0
         for _ in range(24):
             self.clock_line.set_value(1)
@@ -55,7 +62,12 @@ class HX711:
 
 def main():
     """Main function to continuously read and display load cell values."""
-    hx = HX711(DATA_PIN, CLOCK_PIN, chip)
+    try:
+        hx = HX711(DATA_PIN, CLOCK_PIN, chip)
+        print("HX711 initialized successfully")
+    except Exception as e:
+        print(f"Error initializing HX711: {e}")
+        return
     
     print("Load Cell Reader Started")
     print("Press Ctrl+C to stop")
@@ -65,17 +77,22 @@ def main():
     
     try:
         while True:
-            # Read raw value from HX711
-            raw_value = hx.read()
-            
-            # Convert to force in pounds
-            force_lb = (raw_value - INITIAL_OFFSET) / GRAM_CONVERSION
-            
-            # Get current timestamp
-            current_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-            
-            # Print formatted output
-            print(f"{current_time:<20} {raw_value:<12} {force_lb:<12.3f}")
+            try:
+                # Read raw value from HX711
+                raw_value = hx.read()
+                
+                # Convert to force in pounds
+                force_lb = (raw_value - INITIAL_OFFSET) / GRAM_CONVERSION
+                
+                # Get current timestamp
+                current_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+                
+                # Print formatted output
+                print(f"{current_time:<20} {raw_value:<12} {force_lb:<12.3f}")
+                
+            except Exception as e:
+                print(f"Error reading load cell: {e}")
+                time.sleep(1)  # Wait before retrying
             
             # Small delay to prevent overwhelming the terminal
             time.sleep(0.1)
@@ -83,8 +100,11 @@ def main():
     except KeyboardInterrupt:
         print("\nStopping load cell reader...")
     finally:
-        hx.power_down()
-        chip.close()
+        try:
+            hx.power_down()
+            chip.close()
+        except:
+            pass
         print("Program terminated.")
 
 if __name__ == "__main__":
