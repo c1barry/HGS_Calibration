@@ -28,10 +28,10 @@ class HX711:
         # Wait for chip ready with timeout
         timeout_count = 0
         while self.data_line.get_value() and timeout_count < 1000:
-            # timeout_count += 1
-            time.sleep(0.001)  # 1ms delay
+            timeout_count += 1
+            time.sleep(0.00001)  # 1ms delay
         
-        if timeout_count >= 1000:
+        if timeout_count >= 100000:
             raise Exception("HX711 timeout waiting for chip ready")
             
         value = 0
@@ -42,8 +42,8 @@ class HX711:
             if self.data_line.get_value():
                 value += 1
         # 25th pulse sets gain/channel
-        self.clock_line.set_value(1)
-        self.clock_line.set_value(0)
+        # self.clock_line.set_value(1)
+        # self.clock_line.set_value(0)
 
         # Convert to signed 24-bit integer
         if value & 0x800000:
