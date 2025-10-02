@@ -28,7 +28,7 @@ class HX711:
         # Wait for chip ready with timeout
         timeout_count = 0
         while self.data_line.get_value() and timeout_count < 1000:
-            timeout_count += 1
+            # timeout_count += 1
             time.sleep(0.001)  # 1ms delay
         
         if timeout_count >= 1000:
