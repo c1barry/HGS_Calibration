@@ -48,6 +48,11 @@ class HX711:
         # Convert to signed 24-bit integer
         if value & 0x800000:
             value |= ~((1 << 24) - 1)
+        
+        # CRITICAL: Wait for next conversion to be ready
+        # HX711 needs time to prepare next sample (typically 100-200ms)
+        time.sleep(0.1)  # 100ms delay between reads
+        
         return value
 
     def power_down(self):
@@ -92,10 +97,20 @@ def main():
                 
             except Exception as e:
                 print(f"Error reading load cell: {e}")
-                time.sleep(1)  # Wait before retrying
+                # Try power cycling the HX711
+                try:
+                    print("Attempting HX711 power cycle...")
+                    hx.power_down()
+                    time.sleep(0.1)
+                    hx.power_up()
+                    time.sleep(0.2)  # Give extra time after power cycle
+                except:
+                    pass
+                time.sleep(0.5)  # Wait before retrying
             
             # Small delay to prevent overwhelming the terminal
-            time.sleep(0.1)
+            # Note: HX711.read() already includes 100ms delay
+            time.sleep(0.05)  # Additional 50ms for terminal display
             
     except KeyboardInterrupt:
         print("\nStopping load cell reader...")
