@@ -42,8 +42,8 @@ class HX711:
             if self.data_line.get_value():
                 value += 1
         # 25th pulse sets gain/channel
-        self.clock_line.set_value(1)
-        self.clock_line.set_value(0)
+        # self.clock_line.set_value(1)
+        # self.clock_line.set_value(0)
 
         # Convert to signed 24-bit integer
         if value & 0x800000:
