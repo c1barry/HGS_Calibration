@@ -220,7 +220,7 @@ def main():
                       f"{result['ready_time']:5.3f} {result['total_read_time']:5.3f} {analysis_str}")
                 
                 # Wait for proper conversion time
-                time.sleep(max(0, self.conversion_time - result['total_read_time']))
+                time.sleep(max(0, hx.conversion_time - result['total_read_time']))
                 
             except TimeoutError as e:
                 print(f"TIMEOUT: {e}")

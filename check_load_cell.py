@@ -27,9 +27,9 @@ class HX711:
         """Read a single 24-bit sample from HX711."""
         # Wait for chip ready with timeout
         timeout_count = 0
-        # while self.data_line.get_value() and timeout_count < 1000:
-        #     timeout_count += 1
-        #     time.sleep(0.001)  # 1ms delay
+        while self.data_line.get_value() and timeout_count < 1000:
+            timeout_count += 1
+            time.sleep(0.001)  # 1ms delay
         
         if timeout_count >= 1000:
             raise Exception("HX711 timeout waiting for chip ready")
@@ -50,8 +50,8 @@ class HX711:
             value |= ~((1 << 24) - 1)
         
         # CRITICAL: Wait for next conversion to be ready
-        # HX711 needs time to prepare next sample (typically 100-200ms)
-        time.sleep(0.1)  # 100ms delay between reads
+        # HX711 needs time to prepare next sample (typically 200ms for gain=128)
+        time.sleep(0.2)  # 200ms delay between reads
         
         return value
 
